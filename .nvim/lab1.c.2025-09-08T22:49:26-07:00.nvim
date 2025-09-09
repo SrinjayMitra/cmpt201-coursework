@@ -1,0 +1,7 @@
+#include <stdio.h>
+int main(int argc, char *argv[]) {
+  int num;
+  printf("entr your number");
+  scanf("%d", &num);
+  printf("%d", &num);
+}

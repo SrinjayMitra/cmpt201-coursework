@@ -1,0 +1,14 @@
+#include <stdio.h>
+#include <stdlib.h>
+    int main(int argc, char *argv[]) {
+  char buffer[32];
+  char *b = buffer;
+  size_t bufsize = 32;
+  size_t characters;
+  printf("entr your number");
+  characters = getline(&b, &bufsize, stdin);
+
+  printf("%zu", characters);
+  printf("%s", buffer);
+  return 0;
+}
