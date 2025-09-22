@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+#define MAX_INPUT 1024
+
+int main() {
+  char program[MAX_INPUT];
+
+//printf("Enter programs to run.\n");
+
+  while (1) {
+
+    printf("Enter programs to run.\n");
+    printf("> ");
+    fflush(stdout);
+
+    // Read input line from user
+    if (fgets(program, sizeof(program), stdin) == NULL) {
+      // EOF or error, exit loop
+      break;
+    }
+
+    // Remove trailing newline if present
+    program[strcspn(program, "\n")] = 0;
+
+    if (program[0] == '\0') {
+      // Empty input, just prompt again
+      continue;
+    }
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+      perror("fork failed");
+      exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+      // Child process: execute the program
+      execl(program, program, (char *)NULL);
+
+      // If exec returns, it failed
+      fprintf(stderr, "Exec failure\n");
+      exit(EXIT_FAILURE);
+    } else {
+      // Parent process: wait for the child to finish
+      int status;
+      if (waitpid(pid, &status, 0) == -1) {
+        perror("waitpid failed");
+        exit(EXIT_FAILURE);
+      }
+      // Optionally, could print child's exit status here
+    }
+  }
+
+  return 0;
+}
